@@ -1,5 +1,5 @@
 import { Book, BookWithReviews } from '@bookshelf/shared';
-import { bookStore, reviewStore, generateId } from '../data/fileStore';
+import { bookStore, shelfStore, reviewStore, generateId } from '../data/fileStore';
 import { ApiError } from '../middleware/errorHandler';
 
 export interface PaginatedBooks {
@@ -107,8 +107,19 @@ export class BookService {
 
     const [deleted] = books.splice(index, 1);
 
+    const shelves = shelfStore.readAll();
+    for (const shelf of shelves) {
+      shelf.bookIds = shelf.bookIds.filter((bookId) => bookId !== id);
+    }
+
     try {
       bookStore.writeAll(books);
+    } catch {
+      throw new ApiError(500, 'Failed to delete book');
+    }
+
+    try {
+      shelfStore.writeAll(shelves);
     } catch {
       throw new ApiError(500, 'Failed to delete book');
     }
