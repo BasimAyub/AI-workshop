@@ -1,0 +1,44 @@
+---
+description: BookShelf API route and service conventions
+globs: apps/api/src/{routes,services}/**/*.ts, apps/api/src/index.ts
+alwaysApply: false
+---
+
+## Route Handlers
+
+Route handlers in `apps/api/src/routes/books.ts` must only call service methods and return the result. Filtering, slicing, pagination, and ID generation belong in `apps/api/src/services/bookService.ts`.
+
+## Response Shapes
+
+All responses must match these exact shapes — do not add or rename fields:
+
+- **Paginated list** (`GET /api/books`, `GET /api/books/search`): `{ data: Book[], total, page, totalPages }`
+- **Single book** (`GET /api/books/:id`): `BookWithReviews` object directly, no wrapper
+- **Created book** (`POST /api/books`): new `Book` object directly, status `201`
+- **Deleted book** (`DELETE /api/books/:id`): deleted `Book` object directly
+- **Health** (`GET /api/health`): `{ status: 'ok' }`
+- **All errors**: `{ error: { status, message } }` — validation errors add `details: string[]`
+
+## Status Codes
+
+- `200` — GET success
+- `201` — POST success
+- `400` — bad input or malformed JSON
+- `404` — resource not found
+- `500` — write failure (thrown as `ApiError` from the service)
+
+## Middleware Order
+
+`index.ts` must register middleware in this exact order:
+1. `express.json()`
+2. Routes (`/api` → bookRoutes)
+3. `notFoundHandler`
+4. `errorHandler`
+
+Never move `notFoundHandler` after `errorHandler`.
+
+## Error Handling
+
+Use `ApiError(status, message)` from `apps/api/src/middleware/errorHandler.ts` to surface errors from services. `errorHandler` serialises it to `{ error: { status, message } }` and handles `entity.parse.failed` Express errors automatically — do not re-implement either behaviour.
+
+Never expose `err.stack` or raw parser error text in any response.

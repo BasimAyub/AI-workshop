@@ -1,0 +1,39 @@
+---
+description: BookShelf test conventions for route and service tests
+globs: apps/api/tests/**/*.ts
+alwaysApply: false
+---
+
+## Test Location and Tooling
+
+All API tests live in `apps/api/tests/`. Jest is configured via `apps/api/jest.config.js` using `ts-jest` with commonjs interop.
+
+## Mocking Strategy
+
+Mock `bookService` at the module level using:
+
+```ts
+jest.mock('../src/services/bookService')
+```
+
+Do not mock `fileStore` directly in route tests. The boundary is the service, not the data layer.
+
+## No Real Data Files
+
+Never read from or write to `/data/*.json` in any test. Define all fixture data as inline objects in the test file.
+
+## Coverage Requirements for New Endpoints
+
+When adding tests for a new endpoint, cover all four cases:
+1. Success (correct status code and response shape)
+2. Each validation or bad-input error (400 with `details` array for POST body errors)
+3. Not found (404)
+4. Write failure — where the service method can throw `ApiError(500, ...)`)
+
+## Known Placeholder Stubs
+
+`GET /api/health` and `GET /api/books` suites in `books.test.ts` are empty `describe` blocks with no assertions. Do not leave them empty when either endpoint is modified — replace with real tests at that point.
+
+## Missing Tests
+
+`DELETE /api/books/:id` is fully implemented but has no test coverage. Write tests before modifying that endpoint.

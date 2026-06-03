@@ -1,0 +1,81 @@
+[{
+    "id": "review_001",
+    "bookId": "book_001",
+    "userId": "user_001",
+    "rating": 5,
+    "text": "Essential reading for any developer. This book changed how I approach software development.",
+    "createdAt": "2025-01-20T14:00:00Z"
+  },
+  {
+    "id": "review_002",
+    "bookId": "book_002",
+    "userId": "user_001",
+    "rating": 5,
+    "text": "Clean Code is a masterpiece. Every software engineer should read this.",
+    "createdAt": "2025-01-20T14:30:00Z"
+  },
+  {
+    "id": "review_003",
+    "bookId": "book_004",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "A powerful story that remains relevant today. Highly recommend.",
+    "createdAt": "2025-01-20T15:00:00Z"
+  },
+  {
+    "id": "review_004",
+    "bookId": "book_005",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "1984 is a chilling exploration of authoritarianism. Thought-provoking and disturbing.",
+    "createdAt": "2025-01-20T15:30:00Z"
+  },
+  {
+    "id": "review_005",
+    "bookId": "book_007",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "Atomic Habits provides practical advice for building good habits. Very useful.",
+    "createdAt": "2025-01-20T16:00:00Z"
+  },
+  {
+    "id": "review_006",
+    "bookId": "book_012",
+    "userId": "user_001",
+    "rating": 5,
+    "text": "Sapiens is a fascinating journey through human history. Highly enlightening.",
+    "createdAt": "2025-01-20T16:30:00Z"
+  },
+  {
+    "id": "review_007",
+    "bookId": "book_013",
+    "userId": "user_001",
+    "rating": 5,
+    "text": "The Hobbit is a timeless adventure. Perfect for any age.",
+    "createdAt": "2025-01-20T17:00:00Z"
+  },
+  {
+    "id": "review_008",
+    "bookId": "book_019",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "Refactoring is crucial for improving code quality. Every developer needs this.",
+    "createdAt": "2025-01-20T17:30:00Z"
+  },
+  {
+    "id": "review_009",
+    "bookId": "book_022",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "The Alchemist is a beautiful story about following your dreams.",
+    "createdAt": "2025-01-20T18:00:00Z"
+  },
+  {
+    "id": "review_010",
+    "bookId": "book_026",
+    "userId": "user_001",
+    "rating": 4,
+    "text": "JavaScript: The Good Parts cuts through the noise and teaches what matters.",
+    "createdAt": "2025-01-20T18:30:00Z"
+  }
+]

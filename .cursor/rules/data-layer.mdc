@@ -1,0 +1,32 @@
+---
+description: BookShelf data layer access and ID rules
+globs: apps/api/src/**/*.ts
+alwaysApply: false
+---
+
+## File Access
+
+All reads and writes to JSON data must go through `bookStore`, `shelfStore`, or `reviewStore` exported from `apps/api/src/data/fileStore.ts`. Never call `fs` or import a JSON file directly from a route or service.
+
+## Active Data Files
+
+The live data files are at the **root** of the repo:
+- `/data/books.json`
+- `/data/shelves.json`
+- `/data/reviews.json`
+
+`apps/api/data/books.json` is a stale development artifact — do not read from or write to it.
+
+## ID Generation
+
+Always use `generateId(prefix)` from `fileStore.ts` to create new IDs. It produces `${prefix}_<timestamp36><random>` (e.g. `book_mpv2br89vfs5bj`).
+
+Never use sequential IDs like `book_001`, `shelf_001`, or `review_001` — they are not the format this project uses.
+
+## Unimplemented Stores
+
+`shelfStore` and `reviewStore` exist in `fileStore.ts` but no API routes for shelves or reviews have been built. Do not add those routes unless explicitly asked.
+
+## Write Errors
+
+Service methods that call `bookStore.writeAll()` must catch write failures and throw `ApiError(500, '<resource> save/delete error message')`. Do not let raw filesystem errors propagate to the route handler.
