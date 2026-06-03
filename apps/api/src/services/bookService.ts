@@ -118,10 +118,17 @@ export class BookService {
       throw new ApiError(500, 'Failed to delete book');
     }
 
-    try {
-      shelfStore.writeAll(shelves);
-    } catch {
-      throw new ApiError(500, 'Failed to delete book');
+    const shelves = shelfStore.readAll();
+    const updatedShelves = shelves.map((shelf) => ({
+      ...shelf,
+      bookIds: shelf.bookIds.filter((bid) => bid !== id),
+    }));
+    if (updatedShelves.some((s, i) => s.bookIds.length !== shelves[i].bookIds.length)) {
+      try {
+        shelfStore.writeAll(updatedShelves);
+      } catch {
+        throw new ApiError(500, 'Failed to update shelves after deleting book');
+      }
     }
 
     return deleted;
