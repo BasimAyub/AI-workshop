@@ -30,3 +30,16 @@ export interface Review {
 export interface BookWithReviews extends Book {
   reviews: Review[];
 }
+
+export interface ReadingList {
+  id: string;
+  name: string;
+  description: string;
+  bookIds: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReadingListWithBooks extends ReadingList {
+  books: Book[];
+}

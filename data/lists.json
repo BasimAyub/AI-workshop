@@ -1,0 +1,20 @@
+[
+  {
+    "id": "list_mq018elh3c2ydz",
+    "name": "Summer Reading",
+    "description": "Books for summer",
+    "bookIds": [
+      "book_002"
+    ],
+    "createdAt": "2026-06-04T21:53:42.629Z",
+    "updatedAt": "2026-06-04T21:54:07.877Z"
+  },
+  {
+    "id": "list_mq01951dcg9b2d",
+    "name": "Summer Reading",
+    "description": "Books for winter",
+    "bookIds": [],
+    "createdAt": "2026-06-04T21:54:16.897Z",
+    "updatedAt": "2026-06-04T21:54:16.897Z"
+  }
+]
