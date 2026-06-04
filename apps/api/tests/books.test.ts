@@ -603,6 +603,50 @@ describe('API Tests', () => {
     });
   });
 
+  describe('GET /api/books/:id/rating-summary', () => {
+    const bookId = 'book_mpv2br89vfs5bj';
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return rating summary with averageRating and totalReviews', async () => {
+      mockedBookService.getRatingSummary.mockReturnValue({
+        bookId,
+        averageRating: 4.5,
+        totalReviews: 2,
+      });
+
+      const res = await request(app).get(`/api/books/${bookId}/rating-summary`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ bookId, averageRating: 4.5, totalReviews: 2 });
+      expect(mockedBookService.getRatingSummary).toHaveBeenCalledWith(bookId);
+    });
+
+    it('should return averageRating 0 and totalReviews 0 when the book has no reviews', async () => {
+      mockedBookService.getRatingSummary.mockReturnValue({
+        bookId,
+        averageRating: 0,
+        totalReviews: 0,
+      });
+
+      const res = await request(app).get(`/api/books/${bookId}/rating-summary`);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ bookId, averageRating: 0, totalReviews: 0 });
+    });
+
+    it('should return 404 when the book does not exist', async () => {
+      mockedBookService.getRatingSummary.mockReturnValue(null);
+
+      const res = await request(app).get('/api/books/book_doesnotexist/rating-summary');
+
+      expect(res.status).toBe(404);
+      expect(res.body.error.message).toBe('Book not found');
+    });
+  });
+
   describe('DELETE /api/books/:id', () => {
     const bookFixture = {
       id: 'book_mpv2br89vfs5bj',

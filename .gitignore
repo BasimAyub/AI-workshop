@@ -1,16 +1,41 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
 build/
+*.tsbuildinfo
+
+# Stale dev artifacts
+apps/api/data/
+
+# Environment files
 .env
 .env.local
+.env.*.local
+
+# OS files
 .DS_Store
+
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Test coverage
 coverage/
+
+# Editor configs
 .vscode/
 .idea/
+.cursor/
+
+# Vim/Emacs temp files
 *.swp
 *.swo
 *~
+
+# AI assistant config
+.claude/
+.claude.json
