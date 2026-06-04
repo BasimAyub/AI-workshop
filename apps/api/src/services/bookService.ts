@@ -1,4 +1,4 @@
-import { Book, BookWithReviews } from '@bookshelf/shared';
+import { Book, BookWithReviews, Review } from '@bookshelf/shared';
 import { bookStore, shelfStore, reviewStore, generateId } from '../data/fileStore';
 import { ApiError } from '../middleware/errorHandler';
 
@@ -7,6 +7,11 @@ export interface PaginatedBooks {
   total: number;
   page: number;
   totalPages: number;
+}
+
+export interface CreateReviewInput {
+  rating: number;
+  text: string;
 }
 
 export interface CreateBookInput {
@@ -97,6 +102,31 @@ export class BookService {
     };
   }
 
+  updateBook(id: string, data: CreateBookInput): Book | null {
+    const books = bookStore.readAll();
+    const index = books.findIndex((b) => b.id === id);
+    if (index === -1) return null;
+
+    const updated: Book = {
+      ...books[index],
+      title: data.title,
+      author: data.author,
+      genre: data.genre,
+      year: data.year,
+      isbn: data.isbn ?? '',
+      description: data.description ?? '',
+    };
+    books[index] = updated;
+
+    try {
+      bookStore.writeAll(books);
+    } catch {
+      throw new ApiError(500, 'Failed to update book');
+    }
+
+    return updated;
+  }
+
   deleteBook(id: string): Book | null {
     const books = bookStore.readAll();
     const index = books.findIndex((b) => b.id === id);
@@ -132,6 +162,41 @@ export class BookService {
     }
 
     return deleted;
+  }
+
+  getBookReviews(bookId: string): Review[] | null {
+    const books = bookStore.readAll();
+    if (!books.some((b) => b.id === bookId)) return null;
+    return reviewStore.readAll().filter((r) => r.bookId === bookId);
+  }
+
+  createReview(bookId: string, data: CreateReviewInput): Review | null {
+    const books = bookStore.readAll();
+    const bookExists = books.some((b) => b.id === bookId);
+
+    if (!bookExists) {
+      return null;
+    }
+
+    const reviews = reviewStore.readAll();
+    const newReview: Review = {
+      id: generateId('review'),
+      bookId,
+      userId: '',
+      rating: data.rating,
+      text: data.text,
+      createdAt: new Date().toISOString(),
+    };
+
+    reviews.push(newReview);
+
+    try {
+      reviewStore.writeAll(reviews);
+    } catch {
+      throw new ApiError(500, 'Failed to save review');
+    }
+
+    return newReview;
   }
 
   createBook(data: CreateBookInput): Book {
