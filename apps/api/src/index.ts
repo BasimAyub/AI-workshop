@@ -1,6 +1,7 @@
 import express from 'express';
 import bookRoutes from './routes/books';
 import listRoutes from './routes/lists';
+import userRoutes from './routes/users';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 // Routes
 app.use('/api', bookRoutes);
 app.use('/api', listRoutes);
+app.use('/api', userRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

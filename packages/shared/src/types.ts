@@ -43,3 +43,23 @@ export interface ReadingList {
 export interface ReadingListWithBooks extends ReadingList {
   books: Book[];
 }
+
+export interface UserProfile {
+  id: string;
+  displayName: string;
+  avatarUrl: string;
+  favoriteGenres: string[];
+  readingStats: {
+    totalBooks: number;
+    finishedBooks: number;
+    reviewedBooks: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserActivity {
+  type: 'review' | 'shelf';
+  message: string;
+  createdAt: string;
+}
