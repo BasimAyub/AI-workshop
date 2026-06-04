@@ -1,5 +1,10 @@
-import { Book, BookWithReviews, Review } from '@bookshelf/shared';
-import { bookStore, shelfStore, reviewStore, generateId } from '../data/fileStore';
+import { Book, BookWithReviews } from '@bookshelf/shared';
+import {
+  bookStore,
+  reviewStore,
+  shelfStore,
+  generateId,
+} from '../data/fileStore';
 import { ApiError } from '../middleware/errorHandler';
 
 export interface PaginatedBooks {
