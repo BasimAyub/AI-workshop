@@ -1,4 +1,4 @@
-import { Book, BookWithReviews } from '@bookshelf/shared';
+import { Book, BookWithReviews, Review } from '@bookshelf/shared';
 import {
   bookStore,
   reviewStore,
@@ -17,6 +17,12 @@ export interface PaginatedBooks {
 export interface CreateReviewInput {
   rating: number;
   text: string;
+}
+
+export interface RatingSummary {
+  bookId: string;
+  averageRating: number;
+  totalReviews: number;
 }
 
 export interface CreateBookInput {
@@ -142,11 +148,6 @@ export class BookService {
 
     const [deleted] = books.splice(index, 1);
 
-    const shelves = shelfStore.readAll();
-    for (const shelf of shelves) {
-      shelf.bookIds = shelf.bookIds.filter((bookId) => bookId !== id);
-    }
-
     try {
       bookStore.writeAll(books);
     } catch {
@@ -167,6 +168,20 @@ export class BookService {
     }
 
     return deleted;
+  }
+
+  getRatingSummary(bookId: string): RatingSummary | null {
+    const books = bookStore.readAll();
+    if (!books.some((b) => b.id === bookId)) return null;
+
+    const reviews = reviewStore.readAll().filter((r) => r.bookId === bookId);
+    const totalReviews = reviews.length;
+    const averageRating =
+      totalReviews === 0
+        ? 0
+        : Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 10) / 10;
+
+    return { bookId, averageRating, totalReviews };
   }
 
   getBookReviews(bookId: string): Review[] | null {

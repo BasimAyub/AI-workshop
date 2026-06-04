@@ -107,6 +107,17 @@ router.get('/books/search', (req: Request, res: Response) => {
   res.json(bookService.searchBooks(query, { page, limit }));
 });
 
+// Get rating summary for a book
+router.get('/books/:id/rating-summary', (req: Request, res: Response) => {
+  const summary = bookService.getRatingSummary(req.params.id);
+
+  if (!summary) {
+    return sendError(res, 404, 'Book not found');
+  }
+
+  res.json(summary);
+});
+
 // Get a single book by ID with reviews
 router.get('/books/:id', (req: Request, res: Response) => {
   const book = bookService.getBookById(req.params.id);
