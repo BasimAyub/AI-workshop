@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { bookService } from '../services/bookService';
-import { validateBook } from '../middleware/validation';
+import { validateBook, validateReview } from '../middleware/validation';
 
 const router: Router = Router();
 
@@ -118,6 +118,23 @@ router.get('/books/:id', (req: Request, res: Response) => {
   res.json(book);
 });
 
+// Update a book by ID
+router.put(
+  '/books/:id',
+  validateBook,
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updated = bookService.updateBook(req.params.id, req.body);
+      if (!updated) {
+        return sendError(res, 404, 'Book not found');
+      }
+      res.json(updated);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 // Delete a book by ID
 router.delete('/books/:id', (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -132,6 +149,32 @@ router.delete('/books/:id', (req: Request, res: Response, next: NextFunction) =>
     next(error);
   }
 });
+
+// Get all reviews for a book
+router.get('/books/:id/reviews', (req: Request, res: Response) => {
+  const reviews = bookService.getBookReviews(req.params.id);
+  if (!reviews) {
+    return sendError(res, 404, 'Book not found');
+  }
+  res.json(reviews);
+});
+
+// Add a review to a book
+router.post(
+  '/books/:id/reviews',
+  validateReview,
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const review = bookService.createReview(req.params.id, req.body);
+      if (!review) {
+        return sendError(res, 404, 'Book not found');
+      }
+      res.status(201).json(review);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // Create a new book
 router.post(

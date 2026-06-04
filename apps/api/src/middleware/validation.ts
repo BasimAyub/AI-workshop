@@ -79,3 +79,40 @@ export const validateBook = (
 
   next();
 };
+
+export const validateReview = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { rating, text } = req.body;
+  const errors: string[] = [];
+
+  if (rating === undefined || rating === null) {
+    errors.push('"rating" is required');
+  } else if (typeof rating !== 'number') {
+    errors.push('"rating" must be a number');
+  } else if (rating < 1 || rating > 5) {
+    errors.push('"rating" must be between 1 and 5');
+  }
+
+  const textError = validateStringField(text, 'text');
+  if (textError) errors.push(textError);
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      error: {
+        status: 400,
+        message: 'Validation failed',
+        details: errors,
+      },
+    });
+  }
+
+  req.body = {
+    rating,
+    text: (text as string).trim(),
+  };
+
+  next();
+};
