@@ -80,6 +80,84 @@ export const validateBook = (
   next();
 };
 
+export const validateList = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { name, description } = req.body;
+  const errors: string[] = [];
+
+  if (name === undefined || name === null) {
+    errors.push('"name" is required');
+  } else if (typeof name !== 'string') {
+    errors.push('"name" must be a string');
+  } else if (name.trim() === '') {
+    errors.push('"name" must not be empty');
+  }
+
+  if (description !== undefined && typeof description !== 'string') {
+    errors.push('"description" must be a string');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      error: {
+        status: 400,
+        message: 'Validation failed',
+        details: errors,
+      },
+    });
+  }
+
+  req.body = {
+    name: (name as string).trim(),
+    description: typeof description === 'string' ? description.trim() : undefined,
+  };
+
+  next();
+};
+
+export const validateListBook = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { bookId, action } = req.body;
+  const errors: string[] = [];
+
+  if (bookId === undefined || bookId === null) {
+    errors.push('"bookId" is required');
+  } else if (typeof bookId !== 'string') {
+    errors.push('"bookId" must be a string');
+  } else if (bookId.trim() === '') {
+    errors.push('"bookId" must not be empty');
+  }
+
+  if (action === undefined || action === null) {
+    errors.push('"action" is required');
+  } else if (action !== 'add' && action !== 'remove') {
+    errors.push('"action" must be "add" or "remove"');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      error: {
+        status: 400,
+        message: 'Validation failed',
+        details: errors,
+      },
+    });
+  }
+
+  req.body = {
+    bookId: (bookId as string).trim(),
+    action,
+  };
+
+  next();
+};
+
 export const validateReview = (
   req: Request,
   res: Response,

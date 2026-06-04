@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Book, Shelf, Review } from '@bookshelf/shared';
+import { Book, Shelf, Review, ReadingList } from '@bookshelf/shared';
 
 const DATA_DIR = path.resolve(__dirname, '../../../../data');
 
@@ -49,6 +49,11 @@ export const shelfStore = {
 export const reviewStore = {
   readAll: (): Review[] => readJsonFile('reviews.json'),
   writeAll: (reviews: Review[]): void => writeJsonFile('reviews.json', reviews),
+};
+
+export const readingListStore = {
+  readAll: (): ReadingList[] => readJsonFile('lists.json'),
+  writeAll: (lists: ReadingList[]): void => writeJsonFile('lists.json', lists),
 };
 
 export const generateId = (prefix: string): string => {
