@@ -158,6 +158,46 @@ export const validateListBook = (
   next();
 };
 
+export const validateUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { displayName, avatarUrl, favoriteGenres } = req.body;
+  const errors: string[] = [];
+
+  const displayNameError = validateStringField(displayName, 'displayName', 100);
+  if (displayNameError) errors.push(displayNameError);
+
+  if (avatarUrl !== undefined && typeof avatarUrl !== 'string') {
+    errors.push('"avatarUrl" must be a string when provided');
+  }
+
+  if (favoriteGenres !== undefined) {
+    if (!Array.isArray(favoriteGenres)) {
+      errors.push('"favoriteGenres" must be an array when provided');
+    } else if (favoriteGenres.some((g) => typeof g !== 'string' || g.trim() === '')) {
+      errors.push('"favoriteGenres" must be an array of non-empty strings');
+    }
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      error: { status: 400, message: 'Validation failed', details: errors },
+    });
+  }
+
+  req.body = {
+    displayName: (displayName as string).trim(),
+    avatarUrl: typeof avatarUrl === 'string' ? avatarUrl.trim() : undefined,
+    favoriteGenres: Array.isArray(favoriteGenres)
+      ? (favoriteGenres as string[]).map((g) => g.trim())
+      : undefined,
+  };
+
+  next();
+};
+
 export const validateReview = (
   req: Request,
   res: Response,
